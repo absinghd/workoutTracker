@@ -6,7 +6,9 @@
 </template>
 
 <script>
-import firebase from '@/firebase/init'
+//import firebase from '@/firebase/init'
+import firebase from'firebase'
+
  console.log(firebase);
 export default {
     name: 'Login',
@@ -17,20 +19,20 @@ export default {
             feedback: null
         }
     },
-    // methods: {
-    //     login(){
-    //         const provider = new firebase.auth.GoogleAuthProvider();
-    //         firebase.auth().signInWithPopup(provider).then(function(result) {
-    //             console.log(result);
-    //         // This gives you a Google Access Token. You can use it to access the Google API.
-    //         this.token = result.credential.accessToken;
-    //         // The signed-in user info.
-    //         this.user = result.user;
-    //     }).catch(error => {
-    //         // Handle Errors here.
-    //         this.feedback = error.message
-    //         })
-    //     }
-    //     }
+    methods: {
+        login(){
+            //create a google provider object
+            const provider = new firebase.auth.GoogleAuthProvider();
+            //login with popup window
+            firebase.auth().signInWithPopup(provider).then(result => {
+                this.token = result.credential.accessToken
+                this.user = result.user
+                console.log(this.user)
+            }).catch(err => {
+                this.feedback = err.message
+            })
+        }
+      }
+
      }
 </script>
