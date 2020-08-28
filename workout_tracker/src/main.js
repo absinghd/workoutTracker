@@ -4,6 +4,7 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 import firebase from 'firebase'
+import 'firebase/firestore'
 
 Vue.config.productionTip = false
 
@@ -21,5 +22,15 @@ new Vue({
     messagingSenderId: "154031917708",
     appId: "1:154031917708:web:ec181815bea97c58cf49a9"
   };
-firebase.initializeApp(firebaseConfig)}
+  firebase.initializeApp(firebaseConfig)}
+
 }).$mount('#app')
+const db = firebase.firestore()
+
+//collection refrences
+const dailyWorkoutCollection = db.collection('dailyWorkouts')
+
+export {
+  db,
+  dailyWorkoutCollection
+}
