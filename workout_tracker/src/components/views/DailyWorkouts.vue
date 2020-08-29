@@ -1,7 +1,12 @@
 <template>
 <div class="container">
     <div class="workout">
-        <p v-if="exercises">{{this.exercises}}</p>
+        <p>{{this.time}}</p> <br> <br>
+          <p>{{this.today}} <br> {{this.workoutTime}}</p>
+        <p v-if="exercises">Curls: <br> {{this.exercises[0].curls}}</p>
+        <p v-if="exercises">Chest Flyes: <br> {{this.exercises[0].chest_flyes}}</p>
+        <p v-if="exercises">Bench Press: <br> {{this.exercises[0].bench_press}}</p>
+        <button @click="printTime">print time</button>
     </div>
     <div class="logo">
       <img src="@/assets/dumbellLogo.png">
@@ -11,28 +16,42 @@
 </template>
 
 <script>
-//import firebase from 'firebase'
-import dailyWorkoutCollection from '@/main.js'
+import firebase from 'firebase'
+import { fromUnixTime } from 'date-fns'
 
 export default {
     name:'DailyWorkout',
     data(){
         return{
-            time: null,
+            today: new Date(),
+            workoutTime: null,
             user: null,
-            exercises:null
+            exercises:[]
         }
     },
+    props:[
+        'time'
+    ],
     created(){
+        const db = firebase.firestore()
             db.collection("dailyWorkouts")
       .get()
       .then(snapshot => {
         snapshot.forEach(doc => {
-        // let workout = doc.exercises.data()
-        // this.exercises.push(workout)
-        console.log(doc)
+        let workout = doc.data()
+        this.exercises.push(workout.exercises)
+        this.workoutTime = workout.time.seconds
+        this.workoutTime = fromUnixTime(this.workoutTime)
         });
       });
+    },
+    mounted(){
+
+    },
+    methods: {
+        printTime(){
+            console.log(this.time)
+        }
     }
 }
 </script>
@@ -41,7 +60,7 @@ export default {
 .logo{
   margin: 0;
   position: absolute;
-  top: 30%;
+  top: 75%;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
     left: 50%;

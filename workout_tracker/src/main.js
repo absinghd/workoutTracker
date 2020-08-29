@@ -30,7 +30,7 @@ const db = firebase.firestore()
 //collection refrences
 const dailyWorkoutCollection = db.collection('dailyWorkouts')
 
-export {
+export default{
   db,
   dailyWorkoutCollection
 }
