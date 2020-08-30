@@ -9,7 +9,7 @@
       </van-nav-bar>
     </div>
  <div>
-      <DailyWorkout :time="time" ref="form"></DailyWorkout>
+      <DailyWorkout :timePass="timePass" ref="form"></DailyWorkout>
  </div>
   </div>
 </template>
@@ -18,7 +18,7 @@
 // @ is an alias to /src
 import Vue from 'vue';
 import { NavBar } from 'vant';
-import { addDays } from 'date-fns'
+import { addDays, format } from 'date-fns'
 import DailyWorkout from '@/components/views/DailyWorkouts'
 
 
@@ -31,16 +31,19 @@ export default {
   },
   data(){
     return{
-      time: new Date ()
+      time: new Date (),
+      timePass: new Date()
     }
   },
   methods: {
         onClickLeft() {
         this.time = addDays((this.time), -1)
+        this.timePass = format((this.time), 'PPPP')
         //console.log(this.time)
     },
     onClickRight() {
         this.time = addDays((this.time), 1)
+        this.timePass = format((this.time), 'PPPP')
         //console.log(this.time)  
         // *use this to pass in child's methods* this.$refs.form.printTime()
         }
