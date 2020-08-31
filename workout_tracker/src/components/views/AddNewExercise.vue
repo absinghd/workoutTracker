@@ -1,8 +1,8 @@
 <template>
   <div>
     <p>add new</p>
-    <div>
-      <van-picker
+    <div class="categorySelector">
+      <van-picker v-if="!categorySelected"
         title="Select Category"
         :columns="this.categories"
         @confirm="onConfirm"
@@ -11,10 +11,30 @@
       />
     </div>
 
+<div v-if="categorySelected" class="exercises">
+<!--   
+    <div v-for="(exercise, i) in exercises" :key=i>
+        <p>{{exercise}}</p>
+    </div>
+-->
+
+      <van-picker
+        title="Select Exercise"
+        :columns="this.exercises"
+        @confirm="onConfirm"
+        @Cancel="onCancel"
+        @change="onChangeExercise"
+      />
+
+</div>
+
+
+<!--(for adding)
     <div class="add">
       <img src="@/assets/add_wCircle.png" />
       <p>add new exercise</p>
     </div>
+-->
 
   </div>
 </template>
@@ -30,9 +50,11 @@ export default {
   name: "AddNewExercise",
   data() {
     return {
-      exercises: null,
-      columns: ["Chest", "Biceps", "Triceps", "Back", "Legs"],
-      categories: []
+      exercises: [],
+      categories: [],
+      categorySelected: null,
+      categorydb:null
+
     };
   },
   created() {
@@ -48,15 +70,36 @@ export default {
     //console.log(this.categories);
   },
   methods: {
-    onConfirm(value, index) {
-      Toast(`Value: ${value}, Index: ${index}`);
+    onConfirm(value) {
+      Toast(`Value: ${value}`);
     },
     onChange(picker, value, index) {
+        this.categorySelected = value
+        console.log(this.categorySelected);
+
+    //exercise list
+                const db = firebase.firestore();
+                db.collection("exercises")
+                .where("category", "==", this.categorySelected)
+                .get()
+                .then(snapshot => {
+                    snapshot.forEach(doc => {
+                    let exercise2 = doc.data()
+                   this.exercises.push(exercise2.name)
+                   //console.log(this.exercises)      
+                    })
+                })
+                console.log(this.exercises);
+
       Toast(`Value: ${value}, Index: ${index}`);
     },
     onCancel() {
       Toast("Cancel");
     },
+    onChangeExercise(){
+
+        this.$router.push({ name: "TrackExercise" })
+    }
   },
 };
 </script>
@@ -65,5 +108,8 @@ export default {
 .add{
     padding: 15px;
     text-align: center;
+}
+.categorySelector{
+    margin-top: 10px;
 }
 </style>

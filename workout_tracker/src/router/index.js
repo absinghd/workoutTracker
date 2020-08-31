@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 import Home from '@/components/layout/Home'
 import Login from '@/components/auth/Login'
 import AddNewExercise from '@/components/views/AddNewExercise'
+import TrackExercise from '@/components/views/TrackExercise'
+
 Vue.use(VueRouter)
 
   const routes = [
@@ -20,6 +22,11 @@ Vue.use(VueRouter)
     path: '/addNewExercise',
     name: 'AddNewExercise',
     component: AddNewExercise
+  },
+  {
+    path: '/trackExercise',
+    name: 'TrackExercise',
+    component: TrackExercise
   },
 ]
 
