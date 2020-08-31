@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/components/layout/Home'
 import Login from '@/components/auth/Login'
-
+import AddNewExercise from '@/components/views/AddNewExercise'
 Vue.use(VueRouter)
 
   const routes = [
@@ -15,6 +15,11 @@ Vue.use(VueRouter)
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/addNewExercise',
+    name: 'AddNewExercise',
+    component: AddNewExercise
   },
 ]
 

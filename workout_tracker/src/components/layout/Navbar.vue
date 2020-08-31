@@ -33,6 +33,9 @@ export default {
 }
 </script>
 <style scoped>
+.navbar{
+    padding: 15px;
+}
 .homeIcon{
     display: block;
     position: relative;
