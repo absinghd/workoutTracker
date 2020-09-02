@@ -24,7 +24,7 @@ Vue.use(VueRouter)
     component: AddNewExercise
   },
   {
-    path: '/trackExercise',
+    path: '/track/:exercise',
     name: 'TrackExercise',
     component: TrackExercise
   },

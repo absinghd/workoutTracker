@@ -53,11 +53,13 @@ export default {
       exercises: [],
       categories: [],
       categorySelected: null,
-      categorydb:null
+      categorydb:null,
+      time: this.$route.params.time
 
     };
   },
   created() {
+      console.log(this.time);
     const db = firebase.firestore();
     db.collection("categories").get()
     .then(snapshot => {
@@ -96,9 +98,11 @@ export default {
     onCancel() {
       Toast("Cancel");
     },
-    onChangeExercise(){
-
-        this.$router.push({ name: "TrackExercise" })
+    onChangeExercise(picker, value) {
+        let thisExercise = value
+        // console.log(thisExercise)
+        // console.log(this.time);
+        this.$router.push({ name: "TrackExercise", params: {exercise:thisExercise, time:this.time} })
     }
   },
 };

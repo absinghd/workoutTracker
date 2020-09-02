@@ -16,6 +16,7 @@
           <p>selectedTime: {{ this.timePass }}</p>
           <br />
 
+<!--
           <div v-if="workoutTime">
             workoutTime:{{ this.workoutTime }}
             <div class="theWork" v-for="(exercise, index) in exercises" :key="index">
@@ -26,6 +27,18 @@
               </p>
             </div>
           </div>
+-->
+
+          <div v-if="workoutTime">
+            workoutTime:{{ this.workoutTime }}
+            <div class="theWork" v-for="(exercise, index) in exercises" :key="index">
+              <p class="name">{{ exercise.name }}</p>
+              <a>Weight: {{ exercise.tracker[0] }} lbs</a> &nbsp;|&nbsp;
+              <a>Reps: {{ exercise.tracker[1] }}</a>
+              <br>
+            </div>
+          </div>
+
 
           <button @click="printTime">print time</button>
         </div>
@@ -63,6 +76,7 @@ export default {
       workoutTime: null,
       user: null,
       exercises: [],
+      exerciseName:null
     };
   },
   methods: {
@@ -116,8 +130,9 @@ export default {
       console.log("updated");
     },
     goAddNewExercise(){
-      this.$router.push({ name: "AddNewExercise" })
-    }
+      this.$router.push({ name: "AddNewExercise", params: {time: this.timePass} })
+// console.log(this.timePass);    
+}
   },
   created() {
     this.timePass = format(this.timePass, "PPPP");
@@ -133,6 +148,7 @@ export default {
           // console.log(workout.time);
           // console.log(this.exercises);
           this.workoutTime = workout.time;
+          this.exerciseName = workout.name
           //this.exercises.push(workout.exercises);
 
           // print out the date from unix
