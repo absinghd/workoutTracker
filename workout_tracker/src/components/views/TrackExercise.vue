@@ -22,103 +22,103 @@
     </div>
 
     <div class="buttons">
-<van-button plain type="primary" color="blue" class="save" @click="saveExercise">Save</van-button>
-<van-button plain type="primary" color="grey" class="cancel">Cancel</van-button>
+      <van-button
+        plain
+        type="primary"
+        color="blue"
+        class="save"
+        @click="saveExercise"
+      >
+        Save
+      </van-button>
+      <van-button plain type="primary" color="grey" class="cancel">
+        Cancel
+      </van-button>
     </div>
 
-<div class="todayHistory">
-    
-    <div class="showReps">
-        <a>{{ exerciseCount }}</a>
+
+    <div class="todayHistory">
+      <van-divider   :style="{ color: '#2a2a2a', borderColor: '#2a2a2a', padding: '0 16px' }">Today's History</van-divider>
+      <div v-if="exerciseCount">
+        <div v-for="(exercise, i) in exerciseCount" :key="i" class="showReps">
+          <a>weight:{{ exercise[0] }}, &nbsp; reps:{{ exercise[1] }}</a>
+          <br />
+        </div>
+      </div>
     </div>
-
-</div>
-
   </div>
 </template>
 
 <script>
-import firebase from 'firebase'
+import firebase from "firebase";
 import Vue from "vue";
-import { Stepper, Button } from "vant";
+import { Stepper, Button, Divider } from "vant";
 
 Vue.use(Stepper);
 Vue.use(Button);
+Vue.use(Divider);
+
 
 export default {
   name: "TrackExercise",
   data() {
     return {
       repValue: [],
-      weightValue: null,
+      weightValue: [],
       exerciseName: this.$route.params.exercise,
       time: this.$route.params.time,
-      exerciseCount:[],
-      exercises:[]
+      exerciseCount: [],
+      exerciseAmount: [],
     };
   },
   methods: {
-      
-      saveExercise(){
-          this.exerciseCount = [this.weightValue ,this.repValue]
-          console.log(this.exerciseCount)
-          console.log(this.exerciseName);
-          console.log(this.time);
-          const db = firebase.firestore();
-          db.collection('dailyExercise').add({
-                    name: this.exerciseName,
-                    tracker: this.exerciseCount,
-                    time: this.time   
-          })
-
-                 
-        //   db.collection('dailyExercise').add({
-        //             name: this.exerciseName,
-        //             weight: this.weightValue,
-        //             rep: this.repValue,
-        //             time: this.time
-          
-                    .then(() => {
-                    this.repValue = null
-                    this.weightValue =null
-                })
-                
-      },
-  },
-  created(){
+    saveExercise() {
+      this.exerciseCount = [];
+      this.exerciseAmount = [this.weightValue, this.repValue];
+      // console.log(this.exerciseCount);
+      // console.log(this.exerciseName);
+      // console.log(this.time);
       const db = firebase.firestore();
-    db.collection("dailyExercise")
-      .where("time", "==", this.time)
-      //.where("name", "==", this.name)
-      .get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
-          let workout = doc.data();
-          this.exercises.unshift(workout);
-          this.exerciseCount = workout.tracker
-      //console.log(this.exerciseCount);
-  })
-})
-},
-updated(){
+      db.collection("dailyExercise")
+        .add({
+          name: this.exerciseName,
+          tracker: this.exerciseAmount,
+          time: this.time,
+        })
+        .then(() => {
+          this.repValue = [];
+          this.weightValue = [];
+          this.exerciseAmount = [];
+
+          const de = db.collection("dailyExercise").where("time", "==", this.time);
+          de.where("name", "==", this.exerciseName)
+            .get()
+            .then((snapshot) => {
+              snapshot.forEach((doc) => {
+                let workout = doc.data();
+                this.exerciseCount.unshift(workout.tracker);
+              });
+            });
+        });
+        
+        console.log(this.exerciseCount);
+    },
+  },
+  created() {
     const db = firebase.firestore();
-    db.collection("dailyExercise")
-      .where("time", "==", this.time)
-      //.where("name", "==", this.name)
+    const de = db.collection("dailyExercise").where("time", "==", this.time);
+    de.where("name", "==", this.exerciseName)
       .get()
       .then((snapshot) => {
         snapshot.forEach((doc) => {
           let workout = doc.data();
-          this.exercises.unshift(workout);
-          this.exerciseCount = workout.tracker
-          if(workout.name == this.exerciseName){
-            //   console.log(workout.name);
-          }
-      //console.log(this.exerciseCount);
-  })
-})
-}
-  }
+          this.exerciseCount.unshift(workout.tracker);
+          // console.log(workout.tracker);
+          //console.log(this.exerciseCount);
+        });
+      });
+  },
+};
 </script>
 
 <style scoped>
@@ -134,16 +134,25 @@ updated(){
 .reps {
   padding-top: 10px;
 }
-.buttons{
-    text-align: center;
-    padding: 20px;
+.buttons {
+  text-align: center;
+  padding: 20px;
 }
-.save{
-    padding: 20px;
-    margin-right: 20px;
+.save {
+  padding: 20px;
+  margin-right: 20px;
 }
-.cancel{
-    padding: 20px;
-    margin-left: 20px;
+.cancel {
+  padding: 20px;
+  margin-left: 20px;
+}
+.todayHistory {
+  text-align: center;
+}
+.showReps {
+  padding: 8px;
+}
+.historyTitle{
+  padding: 5px;
 }
 </style>

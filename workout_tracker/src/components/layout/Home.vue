@@ -16,29 +16,30 @@
           <p>selectedTime: {{ this.timePass }}</p>
           <br />
 
-<!--
-          <div v-if="workoutTime">
-            workoutTime:{{ this.workoutTime }}
-            <div class="theWork" v-for="(exercise, index) in exercises" :key="index">
-              <p class="name">{{ exercise.name }}</p>
-              <p>weight: {{ exercise.weight }} lbs</p>
-              <p v-for="(repC, i) in exercise.rep" :key="i">
-                rep-{{ i + 1 }}: {{ repC }}
-              </p>
+          <div v-for="(exerciseName, i) in allExercises" :key="i">
+            <div v-for="(exercise, index) in exercises" :key="index">
+              <a v-if="exerciseName = exercise.name" > {{exerciseName}}{{exercise.tracker[0]}}</a>
             </div>
           </div>
--->
+
+          <br />
+
 
           <div v-if="workoutTime">
             workoutTime:{{ this.workoutTime }}
-            <div class="theWork" v-for="(exercise, index) in exercises" :key="index">
+
+            <div
+              class="theWork"
+              v-for="(exercise, index) in exercises"
+              :key="index"
+            >
               <p class="name">{{ exercise.name }}</p>
-              <a>Weight: {{ exercise.tracker[0] }} lbs</a> &nbsp;|&nbsp;
+              <a>Weight: {{ exercise.tracker[0] }} lbs</a>
+              &nbsp;|&nbsp;
               <a>Reps: {{ exercise.tracker[1] }}</a>
-              <br>
+              <br />
             </div>
           </div>
-
 
           <button @click="printTime">print time</button>
         </div>
@@ -76,52 +77,53 @@ export default {
       workoutTime: null,
       user: null,
       exercises: [],
-      exerciseName:null
+      exerciseName: null,
+      allExercises: [],
     };
   },
   methods: {
     onClickLeft() {
-      this.exercises = []
+      this.exercises = [];
       this.time = addDays(this.time, -1);
       this.timePass = format(this.time, "PPPP");
       //console.log(this.time)
 
       //update
-    const db = firebase.firestore();
-    db.collection("dailyExercise")
-      .where("time", "==", this.timePass)
-      .get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
-          let workout = doc.data();
-          this.exercises.unshift(workout);
-          // console.log(workout.time);
-          // console.log(this.exercises);
-          this.workoutTime = workout.time;
+      const db = firebase.firestore();
+      db.collection("dailyExercise")
+        .where("time", "==", this.timePass)
+        .get()
+        .then((snapshot) => {
+          snapshot.forEach((doc) => {
+            let workout = doc.data();
+            this.exercises.unshift(workout);
+            // console.log(workout.time);
+            // console.log(this.exercises);
+            this.workoutTime = workout.time;
+          });
         });
-      });
     },
     onClickRight() {
-      this.exercises = []
+      this.exercises = [];
       this.time = addDays(this.time, 1);
       this.timePass = format(this.time, "PPPP");
       //console.log(this.time)
       // *use this to pass in child's methods* this.$refs.form.printTime()
 
       //update
-    const db = firebase.firestore();
-    db.collection("dailyExercise")
-      .where("time", "==", this.timePass)
-      .get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
-          let workout = doc.data();
-          this.exercises.unshift(workout);
-          // console.log(workout.time);
-          // console.log(this.exercises);
-          this.workoutTime = workout.time;
+      const db = firebase.firestore();
+      db.collection("dailyExercise")
+        .where("time", "==", this.timePass)
+        .get()
+        .then((snapshot) => {
+          snapshot.forEach((doc) => {
+            let workout = doc.data();
+            this.exercises.unshift(workout);
+            // console.log(workout.time);
+            // console.log(this.exercises);
+            this.workoutTime = workout.time;
+          });
         });
-      });
     },
     printTime() {
       console.log(this.timePass);
@@ -129,10 +131,13 @@ export default {
     update() {
       console.log("updated");
     },
-    goAddNewExercise(){
-      this.$router.push({ name: "AddNewExercise", params: {time: this.timePass} })
-// console.log(this.timePass);    
-}
+    goAddNewExercise() {
+      this.$router.push({
+        name: "AddNewExercise",
+        params: { time: this.timePass },
+      });
+      // console.log(this.timePass);
+    },
   },
   created() {
     this.timePass = format(this.timePass, "PPPP");
@@ -148,7 +153,7 @@ export default {
           // console.log(workout.time);
           // console.log(this.exercises);
           this.workoutTime = workout.time;
-          this.exerciseName = workout.name
+          this.exerciseName = workout.name;
           //this.exercises.push(workout.exercises);
 
           // print out the date from unix
@@ -159,6 +164,15 @@ export default {
           //   var date = a.getDate();
           //   var timestamp = date + ' ' + month + ' ' + year
           //   console.log(timestamp);
+        });
+      });
+    db.collection("exercises")
+      .get()
+      .then((snapshot) => {
+        snapshot.forEach((doc) => {
+          let exercises = doc.data();
+          this.allExercises.push(exercises.name);
+          // console.log(this.allExercises);
         });
       });
   },
@@ -184,13 +198,12 @@ export default {
   font-size: 20px;
   margin: 0px;
   text-align: center;
-
 }
-.add{
+.add {
   padding: 15px;
   text-align: center;
 }
-.theWork{
+.theWork {
   margin-left: 10px;
 }
 </style>
