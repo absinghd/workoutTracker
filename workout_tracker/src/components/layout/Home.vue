@@ -16,29 +16,22 @@
           <p>selectedTime: {{ this.timePass }}</p>
           <br />
 
-          <div v-for="(exerciseName, i) in allExercises" :key="i">
-            <div v-for="(exercise, index) in exercises" :key="index">
-              <a v-if="exerciseName = exercise.name" > {{exerciseName}}{{exercise.tracker[0]}}</a>
-            </div>
-          </div>
-
-          <br />
-
-
           <div v-if="workoutTime">
             workoutTime:{{ this.workoutTime }}
 
-            <div
-              class="theWork"
-              v-for="(exercise, index) in exercises"
-              :key="index"
-            >
-              <p class="name">{{ exercise.name }}</p>
-              <a>Weight: {{ exercise.tracker[0] }} lbs</a>
-              &nbsp;|&nbsp;
-              <a>Reps: {{ exercise.tracker[1] }}</a>
-              <br />
+            <!--(this is where I try showing each exercise seperately)-->
+            <div class="theWork">
+              <div v-for="(exerciseName, i) in allExercises" :key="i">
+                <p class="name">{{ exerciseName }}</p>
+
+                <div v-for="(exercise, index) in exercises" :key="index">
+                  <a class="reps" v-if="exercise.name == exerciseName">
+                    Weight: {{ exercise.tracker[0] }} &nbsp;|&nbsp; Reps:{{exercise.tracker[1]}}
+                  </a>
+                </div>
+              </div>
             </div>
+            <br />
           </div>
 
           <button @click="printTime">print time</button>
@@ -83,6 +76,7 @@ export default {
   },
   methods: {
     onClickLeft() {
+      this.allExercises = [];
       this.exercises = [];
       this.time = addDays(this.time, -1);
       this.timePass = format(this.time, "PPPP");
@@ -102,6 +96,26 @@ export default {
             this.workoutTime = workout.time;
           });
         });
+
+            //**reorganize the data */
+    db.collection("dailyExercise")
+      .where("time", "==", this.timePass)
+      .get()
+      .then((snapshot) => {
+        snapshot.forEach((doc) => {
+          let exercises = doc.data();
+          // console.log(exercises);
+          // console.log('space');
+          if (this.allExercises.includes(exercises.name)) {
+            console.log(exercises.name);
+          } else {
+            this.allExercises.push(exercises.name);
+            //console.log(this.allExercises);
+            // console.log('hello');
+          }
+        });
+        //console.log(this.allExercises);
+      });
     },
     onClickRight() {
       this.exercises = [];
@@ -166,14 +180,24 @@ export default {
           //   console.log(timestamp);
         });
       });
-    db.collection("exercises")
+    //**reorganize the data */
+    db.collection("dailyExercise")
+      .where("time", "==", this.timePass)
       .get()
       .then((snapshot) => {
         snapshot.forEach((doc) => {
           let exercises = doc.data();
-          this.allExercises.push(exercises.name);
-          // console.log(this.allExercises);
+          // console.log(exercises);
+          // console.log('space');
+          if (this.allExercises.includes(exercises.name)) {
+            console.log(exercises.name);
+          } else {
+            this.allExercises.push(exercises.name);
+            //console.log(this.allExercises);
+            // console.log('hello');
+          }
         });
+        //console.log(this.allExercises);
       });
   },
 };
@@ -206,4 +230,8 @@ export default {
 .theWork {
   margin-left: 10px;
 }
+.reps{
+  padding: 10px;
+  text-align: center;
+  }
 </style>
