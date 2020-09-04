@@ -31,7 +31,7 @@
       >
         Save
       </van-button>
-      <van-button plain type="primary" color="grey" class="cancel">
+      <van-button plain type="primary" color="grey" class="cancel" @click="$router.go(-2)">
         Cancel
       </van-button>
     </div>
