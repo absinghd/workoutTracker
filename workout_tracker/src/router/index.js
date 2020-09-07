@@ -4,6 +4,7 @@ import Home from '@/components/layout/Home'
 import Login from '@/components/auth/Login'
 import AddNewExercise from '@/components/views/AddNewExercise'
 import TrackExercise from '@/components/views/TrackExercise'
+import ExerciseHistory from '@/components/views/ExerciseHistory'
 
 Vue.use(VueRouter)
 
@@ -28,11 +29,16 @@ Vue.use(VueRouter)
     name: 'TrackExercise',
     component: TrackExercise
   },
+  {
+    path: '/history/:exercise',
+    name: 'ExerciseHistory',
+    component: ExerciseHistory
+  },
 ]
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
+  // base: process.env.BASE_URL,
   routes
 })
 

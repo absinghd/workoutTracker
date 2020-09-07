@@ -1,5 +1,16 @@
 <template>
   <div>
+
+    <div class="exerciseOptions">
+      <van-row>
+  <van-col class="optionSelected" span="8">Track</van-col>
+  <van-col @click="goToHistory" span="8">History</van-col>
+  <van-col span="8">Graph</van-col>
+</van-row>
+    </div>
+
+
+
     <div class="counters">
       <div class="exerciseName">
         <p>{{ this.exerciseName }}</p>
@@ -52,12 +63,13 @@
 <script>
 import firebase from "firebase";
 import Vue from "vue";
-import { Stepper, Button, Divider } from "vant";
+import { Stepper, Button, Divider,Col, Row } from "vant";
 
 Vue.use(Stepper);
 Vue.use(Button);
 Vue.use(Divider);
-
+Vue.use(Col);
+Vue.use(Row);
 
 export default {
   name: "TrackExercise",
@@ -103,6 +115,10 @@ export default {
         
         console.log(this.exerciseCount);
     },
+    goToHistory(){
+        this.$router.push({ name: "ExerciseHistory" });
+
+    }
   },
   created() {
     const db = firebase.firestore();
@@ -154,5 +170,16 @@ export default {
 }
 .historyTitle{
   padding: 5px;
+}
+.exerciseOptions{
+  margin-top: 15px;
+  text-align: center;
+  margin-left: 10px;
+  margin-right: 10px;
+  background-color: #f7f8f7;
+  font-size: 25px;
+}
+.optionSelected{
+  background-color: #d3d3d3;
 }
 </style>
