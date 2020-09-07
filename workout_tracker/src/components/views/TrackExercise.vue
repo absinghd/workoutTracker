@@ -22,17 +22,21 @@
           default-value="0"
           v-model="weightValue"
           step="5"
-          input-width="40px"
-          button-size="32px"
+          input-width="55px"
+          button-size="42px"
         />
       </div>
       <div class="reps">
         <a>rep count</a>
-        <van-stepper v-model="repValue" input-width="40px" button-size="32px" />
+        <van-stepper v-model="repValue" input-width="55px" button-size="42px" />
       </div>
     </div>
 
     <div class="buttons">
+            <van-button plain type="primary" color="grey" class="cancel" @click="$router.go(-2)">
+        Cancel
+      </van-button>
+      
       <van-button
         plain
         type="primary"
@@ -42,9 +46,7 @@
       >
         Save
       </van-button>
-      <van-button plain type="primary" color="grey" class="cancel" @click="$router.go(-2)">
-        Cancel
-      </van-button>
+
     </div>
 
 
@@ -156,11 +158,14 @@ export default {
 }
 .save {
   padding: 20px;
-  margin-right: 20px;
+  margin-left: 20px;
+  margin-top:10%;
 }
 .cancel {
   padding: 20px;
-  margin-left: 20px;
+  margin-right: 20px;
+  margin-top:10%;
+
 }
 .todayHistory {
   text-align: center;

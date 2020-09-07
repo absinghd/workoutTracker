@@ -9,7 +9,9 @@
       >
         <template #title>
           <a v-if="timePass == today">Today</a>
-          <a v-if="timePass != today">{{timePass}}</a>
+          <a v-if="timePass == yesterday">Yesterday</a>
+          <a v-if="timePass == tomorrow">Tomorrow</a>
+          <a v-if="timePass != today && timePass !=yesterday && timePass!= tomorrow">{{timePass}}</a>
         </template>
           
         <template #right>
@@ -45,7 +47,10 @@
             <!--(this is where I try showing each exercise seperately)-->
             <div class="theWork">
               <div v-for="(exerciseName, i) in allExercises" :key="i">
+
+                <router-link :to="{ name: 'TrackExercise', params: {exercise: exerciseName, time:timePass}}">
                 <p class="name">{{ exerciseName }}</p>
+                </router-link>
                 
                 
                
@@ -169,7 +174,9 @@ export default {
       exerciseName: null,
       allExercises: [],
       list:[0,1,2,3,4,5,6],
-      container:null
+      container:null,
+      yesterday: null,
+      tomorrow: null,
     };
   },
   methods: {
@@ -311,11 +318,20 @@ export default {
       });
       // console.log(this.timePass);
     },
+    // goToExerciseTracker(name){
+    //   this.$router.push({ 
+    //     name: "TrackExercise/:id",
+    //     params:{user: this.user} });
+    // }
   },
   created() {
     this.timePass = format(this.timePass, "PPPP");
     this.today = format(this.today, "PPPP");
     this.user = firebase.auth().currentUser
+    this.yesterday = addDays(new Date(), -1)
+    this.yesterday = format(this.yesterday, "PPPP");
+    this.tomorrow = addDays(new Date(), 1);
+    this.tomorrow = format(this.tomorrow, "PPPP");
     //this.timePass = "Monday, August 31st, 2020"
     const db = firebase.firestore();
     db.collection("dailyExercise")

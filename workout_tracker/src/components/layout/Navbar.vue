@@ -3,9 +3,9 @@
     <nav class="deep-purple" darken-1>
       <div class="container">
 
-<!-- (Home Button Icon)     
+<!-- (Home Button Icon) -->    
     <van-icon v-if="user" class="homeIcon" @click="goHome" name="home-o" />
--->
+
        <a v-if="user" @click="goLogout" class="logoutText">Logout</a>
 
 <!-- (Login Icon) 
