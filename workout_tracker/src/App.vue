@@ -18,6 +18,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
-
+<style>
+body{
+  margin: 1rem;
+}
 </style>

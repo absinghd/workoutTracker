@@ -5,6 +5,8 @@ import Login from '@/components/auth/Login'
 import AddNewExercise from '@/components/views/AddNewExercise'
 import TrackExercise from '@/components/views/TrackExercise'
 import ExerciseHistory from '@/components/views/ExerciseHistory'
+import Graph from '@/components/views/Graph'
+import firebase from 'firebase'
 
 Vue.use(VueRouter)
 
@@ -12,7 +14,10 @@ Vue.use(VueRouter)
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    // meta: {
+    //   requiresAuth:true
+    // }
   },
   {
     path: '/login',
@@ -34,6 +39,11 @@ Vue.use(VueRouter)
     name: 'ExerciseHistory',
     component: ExerciseHistory
   },
+  {
+    path: '/graph/:exercise',
+    name: 'Graph',
+    component: Graph
+  },
 ]
 
 const router = new VueRouter({
@@ -41,5 +51,24 @@ const router = new VueRouter({
   // base: process.env.BASE_URL,
   routes
 })
+
+
+router.beforeEach((to, from, next) => {
+  //check to see route requires auth
+  if (to.matched.some(rec => rec.meta.requiresAuth)) {
+    //check auth state of user
+    let user = firebase.auth().currentUser;
+    if (user) {
+      //user signed in, proceed to route
+      next();
+    } else {
+      //no user signed in, redirect to login
+      console.log('no user');
+      next({ name: "Login" });
+    }
+  } else {
+    next();
+  }
+});
 
 export default router

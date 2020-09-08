@@ -1,5 +1,15 @@
 <template>
-  <div class="home">
+  <div>
+
+<div v-if="!user" class="notLoggedIn">
+
+                <router-link :to="{ name: 'Login' }">
+<button>Go Login
+  </button>                </router-link>
+
+</div>
+
+  <div v-if="user" class="home">
     <div class="daySelector">
       <van-nav-bar class="datePicker"
         
@@ -141,6 +151,14 @@
       </van-swipe-item>
 
     </van-swipe>
+
+<!-- Good Job message -->
+
+<div v-if="workoutTime && timePass == today" class="goodJob">
+<p>Great job {{ this.user.displayName }}, keep it up!</p>
+</div>
+
+  </div>
   </div>
 </template>
 
@@ -245,8 +263,9 @@ export default {
 
       //**reorganize the data */
       db.collection("dailyExercise")
-        .where("time", "==", this.timePass)
-        .get()
+    const de = db.collection("dailyExercise").where("user_id", "==", this.user.uid);
+    de.where("time", "==", this.timePass)
+    .get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
             let exercises = doc.data();
@@ -287,8 +306,9 @@ export default {
         });
       //**reorganize the data */
       db.collection("dailyExercise")
-        .where("time", "==", this.timePass)
-        .get()
+    const de = db.collection("dailyExercise").where("user_id", "==", this.user.uid);
+    de.where("time", "==", this.timePass)        
+    .get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
             let exercises = doc.data();
@@ -325,6 +345,7 @@ export default {
     // }
   },
   created() {
+    this.user = firebase.auth().currentUser;
     this.timePass = format(this.timePass, "PPPP");
     this.today = format(this.today, "PPPP");
     this.user = firebase.auth().currentUser
@@ -334,48 +355,84 @@ export default {
     this.tomorrow = format(this.tomorrow, "PPPP");
     //this.timePass = "Monday, August 31st, 2020"
     const db = firebase.firestore();
-    db.collection("dailyExercise")
-      .where("time", "==", this.timePass)
-      .get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
-          let workout = doc.data();
-          this.exercises.unshift(workout);
-          // console.log(workout.time);
-          // console.log(this.exercises);
-          this.workoutTime = workout.time;
-          this.exerciseName = workout.name;
-          //this.exercises.push(workout.exercises);
+    const de = db.collection("dailyExercise").where("user_id", "==", this.user.uid);
+    // de.where("time", "==", this.timePass)
+    //   .get()
+    //   .then((snapshot) => {
+    //     snapshot.forEach((doc) => {
+    //       let workout = doc.data();
+    //       this.exercises.unshift(workout);
+    //       // console.log(workout.time);
+    //       // console.log(this.exercises);
+    //       this.workoutTime = workout.time;
+    //       this.exerciseName = workout.name;
+    //       //this.exercises.push(workout.exercises);
 
-          // print out the date from unix
-          //   var a = this.timePass
-          //   var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-          //   var year = a.getFullYear();
-          //   var month = months[a.getMonth()];
-          //   var date = a.getDate();
-          //   var timestamp = date + ' ' + month + ' ' + year
-          //   console.log(timestamp);
+    //       // print out the date from unix
+    //       //   var a = this.timePass
+    //       //   var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    //       //   var year = a.getFullYear();
+    //       //   var month = months[a.getMonth()];
+    //       //   var date = a.getDate();
+    //       //   var timestamp = date + ' ' + month + ' ' + year
+    //       //   console.log(timestamp);
+    //     });
+    //   });
+    // //**reorganize the data */
+    // db.collection("dailyExercise")
+    //   .where("time", "==", this.timePass)
+    //   .get()
+    //   .then((snapshot) => {
+    //     snapshot.forEach((doc) => {
+    //       let exercises = doc.data();
+    //       // console.log(exercises);
+    //       // console.log('space');
+    //       if (this.allExercises.includes(exercises.name)) {
+    //         //console.log(exercises.name);
+    //       } else {
+    //         this.allExercises.push(exercises.name);
+    //         //console.log(this.allExercises);
+    //         // console.log('hello');
+    //       }
+    //     });
+    //     //console.log(this.allExercises);
+    //   });
+
+    //Test New View
+
+      db.collection("dailyExercise")
+        .where("time", "==", this.timePass)
+        .get()
+        .then((snapshot) => {
+          snapshot.forEach((doc) => {
+            let workout = doc.data();
+            this.exercises.unshift(workout);
+            // console.log(workout.time);
+            // console.log(this.exercises);
+            this.workoutTime = workout.time;
+          });
         });
-      });
-    //**reorganize the data */
-    db.collection("dailyExercise")
-      .where("time", "==", this.timePass)
-      .get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
-          let exercises = doc.data();
-          // console.log(exercises);
-          // console.log('space');
-          if (this.allExercises.includes(exercises.name)) {
-            //console.log(exercises.name);
-          } else {
-            this.allExercises.push(exercises.name);
-            //console.log(this.allExercises);
-            // console.log('hello');
-          }
+      //**reorganize the data */
+      db.collection("dailyExercise")
+    de.where("time", "==", this.timePass)        
+    .get()
+        .then((snapshot) => {
+          snapshot.forEach((doc) => {
+            let exercises = doc.data();
+            // console.log(exercises);
+            // console.log('space');
+            if (this.allExercises.includes(exercises.name)) {
+              //console.log(exercises.name);
+            } else {
+              this.allExercises.push(exercises.name);
+              //console.log(this.allExercises);
+              // console.log('hello');
+            }
+          });
+          //console.log(this.allExercises);
         });
-        //console.log(this.allExercises);
-      });
+
+
   },
     mounted() {
     this.container = this.$refs.container;
@@ -391,7 +448,7 @@ export default {
   margin-right: 10px;
 }
 .logo {
-  margin-top: 10px;
+  margin-top: 8px;
   margin-left: 170px;
   top: 75%;
   -ms-transform: translateY(-50%);
@@ -421,5 +478,16 @@ export default {
 }
 .datePicker{
   background-color: #f7f8f7;
+}
+.goodJob{
+  text-align: center;
+}
+.notLoggedIn{
+  margin-top: 60%;
+  margin-left: 60%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
 }
 </style>
