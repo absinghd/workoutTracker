@@ -54,23 +54,39 @@
       <div v-if="exerciseCount">
         <div v-for="(exercise, i) in exerciseCount" :key="i" class="showReps">
           <a>weight:{{ exercise[0] }}, &nbsp; reps:{{ exercise[1] }}</a>
+          <van-icon class="delete" name="delete" size="13px" color="grey" @click="deleteExercise(i)"/>
           <br />
         </div>
       </div>
     </div>
+
+<!-- TESTING VIEWS HERE 
+
+<div class="testing">
+
+ <h3>testing</h3>
+<p>{{this.exerciseCount}}</p>
+<p>{{this.workoutData}}</p>
+<p>{{this.workoutData[2]}}</p>
+
+
+</div>
+-->
+
   </div>
 </template>
 
 <script>
 import firebase from "firebase";
 import Vue from "vue";
-import { Stepper, Button, Divider,Col, Row } from "vant";
+import { Stepper, Button, Divider,Col, Row, Icon } from "vant";
 
 Vue.use(Stepper);
 Vue.use(Button);
 Vue.use(Divider);
 Vue.use(Col);
 Vue.use(Row);
+Vue.use(Icon)
 
 export default {
   name: "TrackExercise",
@@ -82,7 +98,8 @@ export default {
       time: this.$route.params.time,
       exerciseCount: [],
       exerciseAmount: [],
-      user:null
+      user:null,
+      workoutData:[]
     };
   },
   methods: {
@@ -104,9 +121,9 @@ export default {
           this.repValue = [];
           this.weightValue = [];
           this.exerciseAmount = [];
-
-          const de = db.collection("dailyExercise").where("time", "==", this.time);
-          de.where("name", "==", this.exerciseName)
+    const de = db.collection("dailyExercise").where("time", "==", this.time);
+    const ndb = de.where("time", "==", this.time);
+    ndb.where("name", "==", this.exerciseName)
             .get()
             .then((snapshot) => {
               snapshot.forEach((doc) => {
@@ -114,29 +131,40 @@ export default {
                 this.exerciseCount.unshift(workout.tracker);
               });
             });
-        });
-        
-        console.log(this.exerciseCount);
+        })
     },
     goToHistory(){
         this.$router.push({ name: "ExerciseHistory", params:{exerciseName:this.exerciseName, time:this.time } });
     },
+    deleteExercise(id) {
+      //delete doc from firestore
+      const db = firebase.firestore();
+      db.collection('dailyExercise').doc(id).delete()
+      .then(()=> {
+      this.recipes = this.recipes.filter(recipe => {
+        return recipe.id != id;
+      })
+      })
+    }
   },
   created() {
     const db = firebase.firestore();
     this.user = firebase.auth().currentUser;
     const de = db.collection("dailyExercise").where("time", "==", this.time);
-    de.where("name", "==", this.exerciseName)
+    const ndb = de.where("user_id", "==", this.user.uid);
+    ndb.where("name", "==", this.exerciseName)
       .get()
       .then((snapshot) => {
         snapshot.forEach((doc) => {
           let workout = doc.data();
-          this.exerciseCount.unshift(workout.tracker);
-          // console.log(workout.tracker);
-          //console.log(this.exerciseCount);
+          this.workoutData.push(doc.id, workout.tracker)
+          this.exerciseCount.push(workout.tracker);
+                    console.log(workout);
         });
       });
-  },
+          console.log('space');
+          console.log(this.exerciseCount);
+          },
 };
 </script>
 
@@ -190,5 +218,9 @@ export default {
 }
 .mainContainer{
   margin-top: 5%;
+}
+.delete{
+  margin-left: 5px;
+  padding:2px;
 }
 </style>

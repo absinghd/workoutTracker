@@ -1,41 +1,47 @@
 <template>
   <div class="mainContainer">
+    <div v-if="!user" class="notLoggedIn">
+      <router-link :to="{ name: 'Login' }">
+        <button>Go Login</button>
+      </router-link>
+    </div>
 
-<div v-if="!user" class="notLoggedIn">
+    <div v-if="user" class="home">
+      <div class="daySelector">
+        <van-nav-bar
+          class="datePicker"
+          left-arrow
+          @click-left="onClickLeft"
+          @click-right="onClickRight"
+        >
+          <template #title>
+            <a v-if="timePass == today">Today</a>
+            <a v-if="timePass == yesterday">Yesterday</a>
+            <a v-if="timePass == tomorrow">Tomorrow</a>
+            <a
+              v-if="
+                timePass != today &&
+                  timePass != yesterday &&
+                  timePass != tomorrow
+              "
+            >
+              {{ timePass }}
+            </a>
+          </template>
 
-                <router-link :to="{ name: 'Login' }">
-<button>Go Login
-  </button>                </router-link>
-
-</div>
-
-  <div v-if="user" class="home">
-    <div class="daySelector">
-      <van-nav-bar class="datePicker"
-        
-        left-arrow
-        @click-left="onClickLeft"
-        @click-right="onClickRight"
-      >
-        <template #title>
-          <a v-if="timePass == today">Today</a>
-          <a v-if="timePass == yesterday">Yesterday</a>
-          <a v-if="timePass == tomorrow">Tomorrow</a>
-          <a v-if="timePass != today && timePass !=yesterday && timePass!= tomorrow">{{timePass}}</a>
-        </template>
-          
-        <template #right>
-          <van-icon name="arrow" />
-        </template>
-
-      </van-nav-bar>
-      <br>
+          <template #right>
+            <van-icon name="arrow" />
+          </template>
+        </van-nav-bar>
+        <br />
 
         <div @click="goAddNewExercise" class="add">
-          <img src="@/assets/add_wCircle.png" /><br>
+          <img src="@/assets/add_wCircle.png" />
+          <br />
           <a>add new workout</a>
-        </div><br>
-      <!--
+        </div>
+        <br />
+        <!--
       <van-nav-bar
         title= Today
         left-text="<"
@@ -44,128 +50,111 @@
         @click-right="onClickRight"
       ></van-nav-bar>
 -->
-    </div>
+      </div>
 
-<van-swipe @change="onClickRight" indicator-color="white">
-   <van-swipe-item>
-    <div>
-      <div class="container">
-        <div class="workout">
+      <van-swipe @change="onClickRight" indicator-color="white">
+        <van-swipe-item>
+          <div>
+            <div class="container">
+              <div class="workout">
+                <div v-if="workoutTime">
+                  <!--(this is where I try showing each exercise seperately)-->
+                  <div class="theWork">
+                    <div v-for="(exerciseName, i) in allExercises" :key="i">
+                      <router-link
+                        :to="{
+                          name: 'TrackExercise',
+                          params: { exercise: exerciseName, time: timePass },
+                        }"
+                      >
+                        <p class="name">{{ exerciseName }}</p>
+                      </router-link>
 
-          <div v-if="workoutTime">
-
-            <!--(this is where I try showing each exercise seperately)-->
-            <div class="theWork">
-              <div v-for="(exerciseName, i) in allExercises" :key="i">
-
-                <router-link :to="{ name: 'TrackExercise', params: {exercise: exerciseName, time:timePass}}">
-                <p class="name">{{ exerciseName }}</p>
-                </router-link>
-                
-                
-               
-                <div v-for="(exercise, index) in exercises" :key="index">
-                  
-                  <van-grid >
-                    <!--
+                      <div v-for="(exercise, index) in exercises" :key="index">
+                        <van-grid>
+                          <!--
                   <p class="reps" v-if="exercise.name == exerciseName">
                     Weight: {{ exercise.tracker[0] }} lbs &nbsp;|&nbsp; Reps:{{
                       exercise.tracker[1]
                     }}
                   </p>
 -->
-                  <a class="reps" v-if="exercise.name == exerciseName"> 
-                  {{ exercise.tracker[0] }} lbs
-                  </a>
-                  <a class="reps" v-if="exercise.name == exerciseName">
-                  {{ exercise.tracker[1] }} reps
-                  </a>
-                  </van-grid>
-            
+                          <a class="reps" v-if="exercise.name == exerciseName">
+                            {{ exercise.tracker[0] }} lbs
+                          </a>
+                          <a class="reps" v-if="exercise.name == exerciseName">
+                            {{ exercise.tracker[1] }} reps
+                          </a>
+                        </van-grid>
+                      </div>
+                      <br />
+                    </div>
+                  </div>
+                  <br />
                 </div>
-                <br>
               </div>
-            </div>
-            <br />
-          </div>
+              <!-- THIS IS WHERE I CAN TEST MY SHIT -->
 
-        </div>
-<!-- THIS IS WHERE I CAN TEST MY SHIT -->
-
-
-
-<!--the LOGO
+              <!--the LOGO
         <div class="logo">
           <img src="@/assets/dumbellLogo.png" />
         </div>
 -->
-      </div>
-    </div>
-    </van-swipe-item>
-      <van-swipe-item>
+            </div>
+          </div>
+        </van-swipe-item>
+        <van-swipe-item>
+          <div>
+            <div class="container">
+              <div class="workout">
+                <div v-if="workoutTime">
+                  <!--(this is where I try showing each exercise seperately)-->
+                  <div class="theWork">
+                    <div v-for="(exerciseName, i) in allExercises" :key="i">
+                      <p class="name">{{ exerciseName }}</p>
 
-           <div>
-      <div class="container">
-        <div class="workout">
-
-          <div v-if="workoutTime">
-
-            <!--(this is where I try showing each exercise seperately)-->
-            <div class="theWork">
-              <div v-for="(exerciseName, i) in allExercises" :key="i">
-                <p class="name">{{ exerciseName }}</p>
-                
-                
-               
-                <div v-for="(exercise, index) in exercises" :key="index">
-                  
-                  <van-grid >
-                    <!--
+                      <div v-for="(exercise, index) in exercises" :key="index">
+                        <van-grid>
+                          <!--
                   <p class="reps" v-if="exercise.name == exerciseName">
                     Weight: {{ exercise.tracker[0] }} lbs &nbsp;|&nbsp; Reps:{{
                       exercise.tracker[1]
                     }}
                   </p>
 -->
-                  <a class="reps" v-if="exercise.name == exerciseName"> 
-                  {{ exercise.tracker[0] }} lbs
-                  </a>
-                  <a class="reps" v-if="exercise.name == exerciseName">
-                  {{ exercise.tracker[1] }} reps
-                  </a>
-                  </van-grid>
-            
+                          <a class="reps" v-if="exercise.name == exerciseName">
+                            {{ exercise.tracker[0] }} lbs
+                          </a>
+                          <a class="reps" v-if="exercise.name == exerciseName">
+                            {{ exercise.tracker[1] }} reps
+                          </a>
+                        </van-grid>
+                      </div>
+                      <br />
+                    </div>
+                  </div>
+                  <br />
                 </div>
-                <br>
               </div>
+              <!-- THIS IS WHERE I CAN TEST MY SHIT -->
             </div>
-            <br />
           </div>
+        </van-swipe-item>
+      </van-swipe>
 
-        </div>
-<!-- THIS IS WHERE I CAN TEST MY SHIT -->
+      <!-- Good Job message -->
 
-
+      <div v-if="workoutTime && timePass == today" class="goodJob">
+        <p>Great job {{ this.user.displayName }}, keep it up!</p>
       </div>
-    </div> 
-      </van-swipe-item>
-
-    </van-swipe>
-
-<!-- Good Job message -->
-
-<div v-if="workoutTime && timePass == today" class="goodJob">
-<p>Great job {{ this.user.displayName }}, keep it up!</p>
-</div>
-
-  </div>
+    </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import Vue from "vue";
-import { NavBar, Grid, GridItem, Swipe, SwipeItem} from "vant";
+import { NavBar, Grid, GridItem, Swipe, SwipeItem } from "vant";
 import { addDays, format } from "date-fns";
 import firebase from "firebase";
 
@@ -174,9 +163,6 @@ Vue.use(Grid);
 Vue.use(GridItem);
 Vue.use(Swipe);
 Vue.use(SwipeItem);
-
-
-
 
 export default {
   name: "Home",
@@ -187,12 +173,12 @@ export default {
       timePass: new Date(),
       today: new Date(),
       workoutTime: null,
-      user:null,
+      user: null,
       exercises: [],
       exerciseName: null,
       allExercises: [],
-      list:[0,1,2,3,4,5,6],
-      container:null,
+      list: [0, 1, 2, 3, 4, 5, 6],
+      container: null,
       yesterday: null,
       tomorrow: null,
     };
@@ -208,13 +194,15 @@ export default {
 
       //update
       const db = firebase.firestore();
-      db.collection("dailyExercise")
-        .where("time", "==", this.timePass)
+      const de = db
+        .collection("dailyExercise")
+        .where("user_id", "==", this.user.uid);
+      de.where("time", "==", this.timePass)
         .get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
             let workout = doc.data();
-            this.exercises.unshift(workout);
+            this.exercises.push(workout);
             // console.log(workout.time);
             // console.log(this.exercises);
             this.workoutTime = workout.time;
@@ -248,13 +236,15 @@ export default {
 
       //update
       const db = firebase.firestore();
-      db.collection("dailyExercise")
-        .where("time", "==", this.timePass)
+      const de = db
+        .collection("dailyExercise")
+        .where("user_id", "==", this.user.uid);
+      de.where("time", "==", this.timePass)
         .get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
             let workout = doc.data();
-            this.exercises.unshift(workout);
+            this.exercises.push(workout);
             // console.log(workout.time);
             // console.log(this.exercises);
             this.workoutTime = workout.time;
@@ -262,10 +252,9 @@ export default {
         });
 
       //**reorganize the data */
-      db.collection("dailyExercise")
-    const de = db.collection("dailyExercise").where("user_id", "==", this.user.uid);
-    de.where("time", "==", this.timePass)
-    .get()
+
+      de.where("time", "==", this.timePass)
+        .get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
             let exercises = doc.data();
@@ -292,23 +281,24 @@ export default {
 
       //update
       const db = firebase.firestore();
-      db.collection("dailyExercise")
-        .where("time", "==", this.timePass)
+      const de = db
+        .collection("dailyExercise")
+        .where("user_id", "==", this.user.uid);
+      de.where("time", "==", this.timePass)
         .get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
             let workout = doc.data();
-            this.exercises.unshift(workout);
+            this.exercises.push(workout);
             // console.log(workout.time);
             // console.log(this.exercises);
             this.workoutTime = workout.time;
           });
         });
       //**reorganize the data */
-      db.collection("dailyExercise")
-    const de = db.collection("dailyExercise").where("user_id", "==", this.user.uid);
-    de.where("time", "==", this.timePass)        
-    .get()
+
+      de.where("time", "==", this.timePass)
+        .get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
             let exercises = doc.data();
@@ -339,7 +329,7 @@ export default {
       // console.log(this.timePass);
     },
     // goToExerciseTracker(name){
-    //   this.$router.push({ 
+    //   this.$router.push({
     //     name: "TrackExercise/:id",
     //     params:{user: this.user} });
     // }
@@ -348,14 +338,16 @@ export default {
     this.user = firebase.auth().currentUser;
     this.timePass = format(this.timePass, "PPPP");
     this.today = format(this.today, "PPPP");
-    this.user = firebase.auth().currentUser
-    this.yesterday = addDays(new Date(), -1)
+    this.user = firebase.auth().currentUser;
+    this.yesterday = addDays(new Date(), -1);
     this.yesterday = format(this.yesterday, "PPPP");
     this.tomorrow = addDays(new Date(), 1);
     this.tomorrow = format(this.tomorrow, "PPPP");
     //this.timePass = "Monday, August 31st, 2020"
     const db = firebase.firestore();
-    const de = db.collection("dailyExercise").where("user_id", "==", this.user.uid);
+    const de = db
+      .collection("dailyExercise")
+      .where("user_id", "==", this.user.uid);
     // de.where("time", "==", this.timePass)
     //   .get()
     //   .then((snapshot) => {
@@ -400,41 +392,38 @@ export default {
 
     //Test New View
 
-      db.collection("dailyExercise")
-        .where("time", "==", this.timePass)
-        .get()
-        .then((snapshot) => {
-          snapshot.forEach((doc) => {
-            let workout = doc.data();
-            this.exercises.unshift(workout);
-            // console.log(workout.time);
-            // console.log(this.exercises);
-            this.workoutTime = workout.time;
-          });
+    de.where("time", "==", this.timePass)
+      .get()
+      .then((snapshot) => {
+        snapshot.forEach((doc) => {
+          let workout = doc.data();
+          this.exercises.push(workout);
+          // console.log(workout.time);
+          // console.log(this.exercises);
+          this.workoutTime = workout.time;
         });
-      //**reorganize the data */
-      db.collection("dailyExercise")
-    de.where("time", "==", this.timePass)        
-    .get()
-        .then((snapshot) => {
-          snapshot.forEach((doc) => {
-            let exercises = doc.data();
-            // console.log(exercises);
-            // console.log('space');
-            if (this.allExercises.includes(exercises.name)) {
-              //console.log(exercises.name);
-            } else {
-              this.allExercises.push(exercises.name);
-              //console.log(this.allExercises);
-              // console.log('hello');
-            }
-          });
-          //console.log(this.allExercises);
+      });
+    //**reorganize the data */
+
+    de.where("time", "==", this.timePass)
+      .get()
+      .then((snapshot) => {
+        snapshot.forEach((doc) => {
+          let exercises = doc.data();
+          // console.log(exercises);
+          // console.log('space');
+          if (this.allExercises.includes(exercises.name)) {
+            //console.log(exercises.name);
+          } else {
+            this.allExercises.push(exercises.name);
+            //console.log(this.allExercises);
+            // console.log('hello');
+          }
         });
-
-
+        //console.log(this.allExercises);
+      });
   },
-    mounted() {
+  mounted() {
     this.container = this.$refs.container;
   },
 };
@@ -468,21 +457,20 @@ export default {
 .theWork {
   margin-left: 10px;
   margin-right: 10px;
-
 }
 .reps {
-  margin:0px;
+  margin: 0px;
   margin-left: 20%;
   padding: 8px;
   text-align: center;
 }
-.datePicker{
+.datePicker {
   background-color: #f7f8f7;
 }
-.goodJob{
+.goodJob {
   text-align: center;
 }
-.notLoggedIn{
+.notLoggedIn {
   margin-top: 60%;
   margin-left: 60%;
   -ms-transform: translateY(-50%);
@@ -490,7 +478,7 @@ export default {
   -ms-transform: translateX(-50%);
   transform: translateX(-50%);
 }
-.mainContainer{
+.mainContainer {
   margin-top: 5%;
 }
 </style>
