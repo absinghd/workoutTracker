@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mainContainer">
 
 <div v-if="!user" class="notLoggedIn">
 
@@ -489,5 +489,8 @@ export default {
   transform: translateY(-50%);
   -ms-transform: translateX(-50%);
   transform: translateX(-50%);
+}
+.mainContainer{
+  margin-top: 5%;
 }
 </style>

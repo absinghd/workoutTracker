@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container, mainContainer">
     <div class="categorySelector" v-if="!categorySelected">
       <p class="title">Select a Category</p>
 
@@ -146,5 +146,8 @@ export default {
   margin-bottom: 20px;
   text-align: center;
   padding: 10px;
+}
+.mainContainer{
+  margin-top: 5%;
 }
 </style>

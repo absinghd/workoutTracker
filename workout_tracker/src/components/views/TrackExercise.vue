@@ -1,11 +1,10 @@
 <template>
-  <div>
+  <div class="mainContainer">
 
     <div class="exerciseOptions">
       <van-row>
-  <van-col class="optionSelected" span="8">Track</van-col>
-  <van-col @click="goToHistory" span="8">History</van-col>
-  <van-col @click="goToGraph" span="8">Graph</van-col>
+  <van-col class="optionSelected" span="12">Track</van-col>
+  <van-col @click="goToHistory" span="12">History</van-col>
 </van-row>
     </div>
 
@@ -122,9 +121,6 @@ export default {
     goToHistory(){
         this.$router.push({ name: "ExerciseHistory", params:{exerciseName:this.exerciseName, time:this.time } });
     },
-    goToGraph(){
-        this.$router.push({ name: "Graph", params:{exerciseName:this.exerciseName, time:this.time} });
-    },
   },
   created() {
     const db = firebase.firestore();
@@ -191,5 +187,8 @@ export default {
 }
 .optionSelected{
   background-color: #d3d3d3;
+}
+.mainContainer{
+  margin-top: 5%;
 }
 </style>

@@ -5,7 +5,6 @@ import Login from '@/components/auth/Login'
 import AddNewExercise from '@/components/views/AddNewExercise'
 import TrackExercise from '@/components/views/TrackExercise'
 import ExerciseHistory from '@/components/views/ExerciseHistory'
-import Graph from '@/components/views/Graph'
 import firebase from 'firebase'
 
 Vue.use(VueRouter)
@@ -38,12 +37,7 @@ Vue.use(VueRouter)
     path: '/history/:exercise',
     name: 'ExerciseHistory',
     component: ExerciseHistory
-  },
-  {
-    path: '/graph/:exercise',
-    name: 'Graph',
-    component: Graph
-  },
+  }
 ]
 
 const router = new VueRouter({
