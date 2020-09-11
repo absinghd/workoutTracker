@@ -94,11 +94,14 @@ export default {
   margin-left: 15%;
 }
 .reps {
-  margin-left: 10%;
+  margin-left: 50%;
   margin-top: 8px;
+  position: relative;
 }
 .weight {
   margin-top: 8px;
+  position: absolute;
+
 }
 .exerciseOptions {
   margin-top: 15px;
@@ -110,8 +113,5 @@ export default {
 }
 .optionSelected {
   background-color: #d3d3d3;
-}
-.mainContainer{
-  margin-top: 5%;
 }
 </style>

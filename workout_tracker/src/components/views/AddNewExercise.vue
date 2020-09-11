@@ -29,7 +29,7 @@
       <p class="title">Select an Exercise</p>
 
       <van-list v-model="loading" :finished="finished" finished-text="">
-        <van-icon name="arrow-left" @click="goBackToCategories" />
+        <van-icon name="arrow-left" @click="goBackToCategories" color="#82bffc"/>
         <van-cell
           @click="exerciseClicked(exercise)"
           v-for="(exercise, i) in exercises"
@@ -37,7 +37,18 @@
           :title="exercise"
         ></van-cell>
       </van-list>
+
+        <div @click="goToNewExercise" class="add">
+          <img src="@/assets/add_wCircle.png" />
+          <br />
+          <a>add new exercise</a>
+        </div>
+
+
+
     </div>
+
+    
 
 <!--The Cancel Button-->
     <div class="cancel">
@@ -123,6 +134,9 @@ export default {
     goBackToCategories() {
       this.categorySelected = null;
     },
+    goToNewExercise(){
+    this.$router.push({ name: "NewExercise", params:{categorySelected:this.categorySelected, time:this.time } });
+    },
   },
 };
 </script>
@@ -148,6 +162,6 @@ export default {
   padding: 10px;
 }
 .mainContainer{
-  margin-top: 5%;
+  margin: 1rem;
 }
 </style>

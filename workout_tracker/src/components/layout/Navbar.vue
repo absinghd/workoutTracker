@@ -1,11 +1,10 @@
 <template>
-  <div class="navbar">
-    <nav class="deep-purple" darken-1>
+  <div  v-if="user" class="navbar">
+    <nav class="deep-purple">
       <div class="container">
 
 <!-- (Home Button Icon) -->    
-    <van-icon v-if="user" class="homeIcon" @click="goHome" name="home-o" />
-
+    <a v-if="user" class="homeIcon" @click="goHome">Home</a>
        <a v-if="user" @click="goLogout" class="logoutText">Logout</a>
 
 <!-- (Login Icon) 
@@ -67,28 +66,23 @@ export default {
 
 <style scoped>
 .navbar {
-  padding: 12px;
-  margin-top: 10px;
+  padding: 20px;
+  margin-top: 2%px;
+background-color: #82bffc;
 }
 .homeIcon {
-  display: block;
-  position: relative;
+  position: absolute;
   float: left;
   margin-left: 40px;
-  top: 8%;
-}
-.loginIcon {
-  display: block;
-  position: relative;
-  float: right;
-  margin-right: 40px;
-  top: 8%;
+  top: 2%;
+  color: white;
 }
 .logoutText{
   display: block;
-  position: relative;
+  position: absolute;
   float: right;
-  margin-right: 40px;
-  top: 8%;
+  margin-left: 60%;
+  top: 2%;
+  color: white;
 }
 </style>

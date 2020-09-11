@@ -7,13 +7,14 @@
     </div>
 
     <div v-if="user" class="home">
-      <div class="daySelector">
+      <div class="daySelector" >
         <van-nav-bar
-          class="datePicker"
+          class="datePicker" 
           left-arrow
           @click-left="onClickLeft"
           @click-right="onClickRight"
         >
+
           <template #title>
             <a v-if="timePass == today">Today</a>
             <a v-if="timePass == yesterday">Yesterday</a>
@@ -30,7 +31,7 @@
           </template>
 
           <template #right>
-            <van-icon name="arrow" />
+            <van-icon name="arrow"/>
           </template>
         </van-nav-bar>
         <br />
@@ -209,8 +210,8 @@ export default {
           });
         });
       //**reorganize the data */
-      db.collection("dailyExercise")
-        .where("time", "==", this.timePass)
+
+      de.where("time", "==", this.timePass)
         .get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
@@ -225,6 +226,7 @@ export default {
               // console.log('hello');
             }
           });
+          //console.log(this.allExercises);
         });
     },
     onClickLeft() {
@@ -478,7 +480,7 @@ export default {
   -ms-transform: translateX(-50%);
   transform: translateX(-50%);
 }
-.mainContainer {
-  margin-top: 5%;
+.mainContainer{
+  margin: 1rem;
 }
 </style>

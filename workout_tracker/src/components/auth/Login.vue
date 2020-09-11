@@ -1,13 +1,15 @@
 <template>
   <div class="container">
-    <van-button class="login-btn" type="primary" @click="login">
+    <van-button color="#82bffc" class="login-btn" type="primary" @click="login">
       Login with Google
     </van-button>
     <p v-if="feedback">{{ feedback }}</p>
 
+<!--
     <div class="logo">
       <img src="@/assets/dumbellLogo.png" />
     </div>
+-->
 
   </div>
 </template>
@@ -71,7 +73,7 @@ export default {
   top: 75%;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
-  left: 50%;
+  left: 40%;
   -ms-transform: translateX(-50%);
   transform: translateX(-50%);
 }

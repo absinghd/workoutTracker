@@ -5,6 +5,7 @@ import Login from '@/components/auth/Login'
 import AddNewExercise from '@/components/views/AddNewExercise'
 import TrackExercise from '@/components/views/TrackExercise'
 import ExerciseHistory from '@/components/views/ExerciseHistory'
+import NewExercise from '@/components/views/NewExercise'
 import firebase from 'firebase'
 
 Vue.use(VueRouter)
@@ -37,7 +38,12 @@ Vue.use(VueRouter)
     path: '/history/:exercise',
     name: 'ExerciseHistory',
     component: ExerciseHistory
-  }
+  },
+  {
+    path: '/newExercise',
+    name: 'NewExercise',
+    component: NewExercise
+  },
 ]
 
 const router = new VueRouter({

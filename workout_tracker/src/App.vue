@@ -19,7 +19,5 @@ export default {
 </script>
 
 <style>
-body{
-  margin: 1rem;
-}
+
 </style>
