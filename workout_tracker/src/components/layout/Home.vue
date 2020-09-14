@@ -1,12 +1,15 @@
 <template>
   <div class="mainContainer">
+   
+   <!-- LOGIN
     <div v-if="!user" class="notLoggedIn">
       <router-link :to="{ name: 'Login' }">
         <button>Go Login</button>
       </router-link>
     </div>
+-->
 
-    <div v-if="user" class="home">
+    <div class="home">
       <div class="daySelector" >
         <van-nav-bar
           class="datePicker" 
@@ -174,7 +177,7 @@ export default {
       timePass: new Date(),
       today: new Date(),
       workoutTime: null,
-      user: null,
+      user: firebase.auth().currentUser,
       exercises: [],
       exerciseName: null,
       allExercises: [],

@@ -22,7 +22,11 @@ new Vue({
     messagingSenderId: "154031917708",
     appId: "1:154031917708:web:ec181815bea97c58cf49a9"
   };
-  firebase.initializeApp(firebaseConfig)}
+  firebase.initializeApp(firebaseConfig)
+  firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+
+}
+  
 
 }).$mount('#app')
 const db = firebase.firestore()

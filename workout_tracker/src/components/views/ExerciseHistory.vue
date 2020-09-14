@@ -59,10 +59,10 @@ export default {
       .get()
       .then((snapshot) => {
         snapshot.forEach((doc) => {
-          this.allWorkouts.unshift(doc.data());
+          this.allWorkouts.push(doc.data());
           this.workout = doc.data();
-          this.exerciseCount.unshift(this.workout.tracker);
-          this.workoutDays.unshift(this.workout.time);
+          this.exerciseCount.push(this.workout.tracker);
+          this.workoutDays.push(this.workout.time);
         });
         this.setWorkoutDays = new Set(this.workoutDays);
       });
