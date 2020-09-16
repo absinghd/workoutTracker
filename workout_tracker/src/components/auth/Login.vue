@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <van-button color="#82bffc" class="login-btn" type="primary" @click="login">
+    <van-button round=true color="#82bffc" class="login-btn" type="primary" @click="login">
       Login with Google
     </van-button>
     <p v-if="feedback">{{ feedback }}</p>
@@ -32,6 +32,11 @@ export default {
       feedback: null,
     };
   },
+    computed: {
+    userA() {
+      return this.$store.getters.getUserA;
+    },
+    },
   methods: {
     login() {
       //create a google provider object
@@ -44,6 +49,7 @@ export default {
           this.token = result.credential.accessToken;
           this.user = result.user;
           console.log(this.user);
+          this.$store.commit("setUserA");
           this.$router.push({ 
         name: "Home",
         params:{user: this.user} });
@@ -51,6 +57,8 @@ export default {
         .catch((err) => {
           this.feedback = err.message;
         });
+          this.$store.commit("setUserA");
+
     },
   },
 };

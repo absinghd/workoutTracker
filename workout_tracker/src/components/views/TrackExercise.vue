@@ -100,7 +100,7 @@ export default {
       time: this.$route.params.time,
       exerciseCount: [],
       exerciseAmount: [],
-      user: null,
+      user: this.$store.state.userA,
       workoutData: [],
       workoutId: [],
       extraWorkoutData: [],

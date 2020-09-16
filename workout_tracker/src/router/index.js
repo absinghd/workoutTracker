@@ -6,7 +6,9 @@ import AddNewExercise from '@/components/views/AddNewExercise'
 import TrackExercise from '@/components/views/TrackExercise'
 import ExerciseHistory from '@/components/views/ExerciseHistory'
 import NewExercise from '@/components/views/NewExercise'
-import firebase from 'firebase'
+//import firebase from 'firebase'
+import store from '@/store'
+
 
 Vue.use(VueRouter)
 
@@ -15,9 +17,13 @@ Vue.use(VueRouter)
     path: '/',
     name: 'Home',
     component: Home,
-    // meta: {
-    //   requiresAuth:true
-    // }
+    beforeEnter(to, from, next){
+      if(!store.getters.getUserA){
+        next('/Login')
+      } else {
+        next()
+      }
+    }
   },
   {
     path: '/login',
@@ -53,22 +59,24 @@ const router = new VueRouter({
 })
 
 
-router.beforeEach((to, from, next) => {
-  //check to see route requires auth
-  if (to.matched.some(rec => rec.meta.requiresAuth)) {
-    //check auth state of user
-    let user = firebase.auth().currentUser;
-    if (user) {
-      //user signed in, proceed to route
-      next();
-    } else {
-      //no user signed in, redirect to login
-      console.log('no user');
-      next({ name: "Login" });
-    }
-  } else {
-    next();
-  }
-});
+// router.beforeEach((to, from, next) => {
+//   //check to see route requires auth
+//   if (to.matched.some(rec => rec.meta.requiresAuth)) {
+//     //check auth state of user
+//     let user = this.$store.state.userA;
+//     //let user = firebase.auth().currentUser;
+//     if (user) {
+//       //user signed in, proceed to route
+//       console.log('user');
+//       next();
+//     } else {
+//       //no user signed in, redirect to login
+//       console.log('no user');
+//       next({ name: "Login" });
+//     }
+//   } else {
+//     next();
+//   }
+// });
 
 export default router

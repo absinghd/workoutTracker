@@ -37,7 +37,7 @@ export default {
   name: "ExerciseHistory",
   data() {
     return {
-      user: null,
+      user: this.$store.state.userA,
       exerciseName: this.$route.params.exerciseName,
       exerciseCount: [],
       workoutDays: [],

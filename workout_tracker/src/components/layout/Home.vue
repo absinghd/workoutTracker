@@ -1,7 +1,6 @@
 <template>
   <div class="mainContainer">
-   
-   <!-- LOGIN
+    <!-- LOGIN
     <div v-if="!user" class="notLoggedIn">
       <router-link :to="{ name: 'Login' }">
         <button>Go Login</button>
@@ -10,14 +9,13 @@
 -->
 
     <div class="home">
-      <div class="daySelector" >
+      <div class="daySelector">
         <van-nav-bar
-          class="datePicker" 
+          class="datePicker"
           left-arrow
           @click-left="onClickLeft"
           @click-right="onClickRight"
         >
-
           <template #title>
             <a v-if="timePass == today">Today</a>
             <a v-if="timePass == yesterday">Yesterday</a>
@@ -34,7 +32,7 @@
           </template>
 
           <template #right>
-            <van-icon name="arrow"/>
+            <van-icon name="arrow" />
           </template>
         </van-nav-bar>
         <br />
@@ -177,7 +175,7 @@ export default {
       timePass: new Date(),
       today: new Date(),
       workoutTime: null,
-      user: firebase.auth().currentUser,
+      user: this.$store.getters.getUserA,
       exercises: [],
       exerciseName: null,
       allExercises: [],
@@ -187,8 +185,14 @@ export default {
       tomorrow: null,
     };
   },
+  computed: {
+    userA() {
+      return this.$store.getters.getUserA;
+    },
+  },
   methods: {
     onSwipe() {
+      this.user = this.$store.state.userA;
       this.allExercises = [];
       this.exercises = [];
       this.time = addDays(this.time, 1);
@@ -233,6 +237,8 @@ export default {
         });
     },
     onClickLeft() {
+      //this.user = firebase.auth().currentUser;
+      this.user = this.$store.state.userA;
       this.allExercises = [];
       this.exercises = [];
       this.time = addDays(this.time, -1);
@@ -277,6 +283,8 @@ export default {
         });
     },
     onClickRight() {
+      //this.user = firebase.auth().currentUser;
+      this.user = this.$store.state.userA;
       this.allExercises = [];
       this.exercises = [];
       this.time = addDays(this.time, 1);
@@ -323,9 +331,6 @@ export default {
     printTime() {
       console.log(this.timePass);
     },
-    update() {
-      console.log("updated");
-    },
     goAddNewExercise() {
       this.$router.push({
         name: "AddNewExercise",
@@ -333,17 +338,25 @@ export default {
       });
       // console.log(this.timePass);
     },
+    getState(){
+    this.$store.commit("setUserA");
+    }
     // goToExerciseTracker(name){
     //   this.$router.push({
     //     name: "TrackExercise/:id",
     //     params:{user: this.user} });
     // }
   },
-  created() {
-    this.user = firebase.auth().currentUser;
+  beforeCreate() {
+    this.$store.commit("setUserA");
+    this.user = this.$store.state.userA;
+  },
+  async created() {
+    await this.$store.commit("setUserA");
+    this.user = this.$store.state.userA;
     this.timePass = format(this.timePass, "PPPP");
     this.today = format(this.today, "PPPP");
-    this.user = firebase.auth().currentUser;
+    //this.user = firebase.auth().currentUser;
     this.yesterday = addDays(new Date(), -1);
     this.yesterday = format(this.yesterday, "PPPP");
     this.tomorrow = addDays(new Date(), 1);
@@ -483,7 +496,7 @@ export default {
   -ms-transform: translateX(-50%);
   transform: translateX(-50%);
 }
-.mainContainer{
+.mainContainer {
   margin: 1rem;
 }
 </style>
