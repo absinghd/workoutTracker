@@ -7,7 +7,7 @@ import TrackExercise from '@/components/views/TrackExercise'
 import ExerciseHistory from '@/components/views/ExerciseHistory'
 import NewExercise from '@/components/views/NewExercise'
 //import firebase from 'firebase'
-import store from '@/store'
+//import store from '@/store'
 
 
 Vue.use(VueRouter)
@@ -17,13 +17,13 @@ Vue.use(VueRouter)
     path: '/',
     name: 'Home',
     component: Home,
-    beforeEnter(to, from, next){
-      if(!store.getters.getUserA){
-        next('/Login')
-      } else {
-        next()
-      }
-    }
+    // beforeEnter(to, from, next){
+    //   if(!store.getters.getUserA){
+    //     next('/Login')
+    //   } else {
+    //     next()
+    //   }
+    // }
   },
   {
     path: '/login',

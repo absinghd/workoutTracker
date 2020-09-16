@@ -15,6 +15,11 @@ export default {
   components: {
     Navbar,
   },
+  computed:{
+    userA() {
+      return this.$store.getters.getUserA;
+    },
+}
 }
 </script>
 

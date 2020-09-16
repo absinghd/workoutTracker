@@ -1,14 +1,14 @@
 <template>
   <div class="mainContainer">
-    <!-- LOGIN
+
     <div v-if="!user" class="notLoggedIn">
       <router-link :to="{ name: 'Login' }">
         <button>Go Login</button>
       </router-link>
     </div>
--->
 
-    <div class="home">
+
+    <div v-if="user" class="home">
       <div class="daySelector">
         <van-nav-bar
           class="datePicker"
@@ -159,6 +159,7 @@ import Vue from "vue";
 import { NavBar, Grid, GridItem, Swipe, SwipeItem } from "vant";
 import { addDays, format } from "date-fns";
 import firebase from "firebase";
+import Navbar from "@/components/layout/Navbar";
 
 Vue.use(NavBar);
 Vue.use(Grid);
@@ -175,7 +176,7 @@ export default {
       timePass: new Date(),
       today: new Date(),
       workoutTime: null,
-      user: this.$store.getters.getUserA,
+      user: Navbar.user,
       exercises: [],
       exerciseName: null,
       allExercises: [],
@@ -189,6 +190,12 @@ export default {
     userA() {
       return this.$store.getters.getUserA;
     },
+  // //**runs anytime that data changes**
+  // watch:{
+  //   timePass(nama, old){
+  //     console.log(nama);
+  //     console.log(old);
+  //   }
   },
   methods: {
     onSwipe() {
@@ -349,11 +356,11 @@ export default {
   },
   beforeCreate() {
     this.$store.commit("setUserA");
-    this.user = this.$store.state.userA;
+    this.user = Navbar.user;
   },
-  async created() {
-    await this.$store.commit("setUserA");
-    this.user = this.$store.state.userA;
+  created() {
+    this.$store.commit("setUserA");
+    this.user = firebase.auth().currentUser;
     this.timePass = format(this.timePass, "PPPP");
     this.today = format(this.today, "PPPP");
     //this.user = firebase.auth().currentUser;
@@ -439,6 +446,7 @@ export default {
           }
         });
         //console.log(this.allExercises);
+        
       });
   },
   mounted() {
