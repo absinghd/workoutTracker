@@ -20,7 +20,7 @@ export default {
       return this.$store.getters.getUserA;
     },
 }
-}
+} 
 </script>
 
 <style>

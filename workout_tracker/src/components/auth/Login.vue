@@ -57,7 +57,7 @@ export default {
         .catch((err) => {
           this.feedback = err.message;
         });
-          this.$store.commit("setUserA");
+          this.$store.commit("setUserA"); 
 
     },
   },
