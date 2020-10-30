@@ -123,7 +123,7 @@ export default {
         })
         .then(() => {
           this.repValue = [];
-          this.weightValue = [];
+          //this.weightValue = [];
           this.exerciseAmount = [];
           const de = db
             .collection("dailyExercise")
